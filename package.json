@@ -1,0 +1,47 @@
+{
+  "name": "dsh-scrapling",
+  "version": "0.1.0",
+  "description": "DSH 插件：把 Scrapling 接成 4 个模型可用工具 —— scrape_fetch / scrape_extract / scrape_batch / scrape_site。零 @deepseek-ai/* 依赖，每次调用一个 Python 进程。",
+  "type": "module",
+  "main": "lib/index.js",
+  "icon": "./icon.svg",
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "scrapling",
+    "scraping",
+    "browser",
+    "stealth"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "echo no-build: plain ESM plugin",
+    "check": "node --check lib/index.js"
+  },
+  "files": [
+    "lib/",
+    "bridge/",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "NOTICE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tietoumiao/dsh-scrapling.git"
+  },
+  "homepage": "https://github.com/tietoumiao/dsh-scrapling",
+  "bugs": {
+    "url": "https://github.com/tietoumiao/dsh-scrapling/issues"
+  },
+  "author": "tietoumiao"
+}

@@ -1,0 +1,43 @@
+# dsh-scrapling bundle layer — applied when a profile lists this package in
+# dsh.profile.bundles (dsh.bundle.patch declaration).
+#
+# One row mounts FOUR Host tools (see lib/index.js):
+#   1. `scrape_fetch`   — one URL -> markdown / text / html (+status, final URL,
+#                         title, char count, truncation flag); GET or POST;
+#                         `options` passes engine knobs through;
+#   2. `scrape_extract` — one URL -> named fields (css/xpath, attribute, regex)
+#                         or `rows` (one object per list item / table row);
+#                         `adaptive` keeps selectors alive across markup drift;
+#   3. `scrape_batch`   — up to 50 URLs, concurrent, per-URL failure isolation,
+#                         optional per-URL extraction;
+#   4. `scrape_site`    — ContentSpider crawl -> one markdown item per page,
+#                         bounded by max_pages and max_total_chars.
+#
+# All four run `bridge/scrape.py` in ONE python process per call. `mode: "http"`
+# uses Scrapling's impersonating HTTP client; `mode: "stealth"` drives a real
+# browser (StealthyFetcher) through the payload under `root/browsers`.
+# `session: "<name>"` keeps a cookie jar at <root>/.sessions/<name>.json, so
+# cookies set on any redirect hop survive between calls.
+#
+# The plugin exports no Config schema on purpose: `apply(ctx, config)` reads the
+# keys below straight off this row, so a profile can override any of them later
+# by editing this block (omitting a key keeps the built-in default).
+- insert:
+    - id: dsh-scrapling
+      name: dsh-scrapling
+      config:
+        # Interpreter that has scrapling installed. Defaults to this path when
+        # the key is absent, so a moved venv only needs this line updated.
+        python: 'D:/deepseekharness workspace/_tools/scrapling/.venv/Scripts/python.exe'
+        # Payload root: PLAYWRIGHT_BROWSERS_PATH = <root>/browsers and the
+        # scrapling/browser TEMP dir = <root>/.tmp (the system Temp is not
+        # writable by node-spawned children on this machine).
+        root: 'D:/deepseekharness workspace/_tools/scrapling'
+        # Hard cap on one call including browser start-up. Omit for
+        # timeout_ms + 45s.
+        callTimeoutMs: 120000
+        # Default `max_chars` when the model does not pass one.
+        maxChars: 20000
+        # Set false to skip the `dsh-scrapling:guide` system-prompt section (the
+        # cross-tool routing note). The four tools are unaffected either way.
+        # promptGuide: false
